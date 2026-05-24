@@ -752,4 +752,87 @@ const handleLogoClick = () => {
     \item[\textbf{Файл}] \texttt{vite.config.js} "--- конфигурация сборщика Vite
 \end{itemize}
 
+\section{Полный код api.js}
+\begin{minted}{JavaScript}
+// Конфигурация для запросов
+const config = {
+  baseUrl: "https://mesto.nomoreparties.co/v1/apf-cohort-203",
+  headers: {
+    authorization: "5478f85e-a2d0-4991-88ba-dd6636dc46d8",
+    "Content-Type": "application/json",
+  },
+};
+
+// Функция проверки ответа от сервера
+const getResponseData = (res) => {
+  return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
+};
+
+// Запрос на получение данных пользователя
+export const getUserInfo = () => {
+  return fetch(`${config.baseUrl}/users/me`, {
+    headers: config.headers,
+  }).then(getResponseData);
+};
+
+// Запрос на получение массива карточек
+export const getCardList = () => {
+  return fetch(`${config.baseUrl}/cards`, {
+    headers: config.headers,
+  }).then(getResponseData);
+};
+
+// Обновление данных профиля
+export const setUserInfo = ({ name, about }) => {
+  return fetch(`${config.baseUrl}/users/me`, {
+    method: "PATCH",
+    headers: config.headers,
+    body: JSON.stringify({
+      name,
+      about,
+    }),
+  }).then(getResponseData);
+};
+
+// Обновление аватара пользователя
+export const updateAvatar = (avatar) => {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
+    method: "PATCH",
+    headers: config.headers,
+    body: JSON.stringify({
+      avatar,
+    }),
+  }).then(getResponseData);
+};
+
+// Добавление новой карточки
+export const postNewCard = ({ name, link }) => {
+  return fetch(`${config.baseUrl}/cards`, {
+    method: "POST",
+    headers: config.headers,
+    body: JSON.stringify({
+      name,
+      link,
+    }),
+  }).then(getResponseData);
+};
+
+// Удаление карточки
+export const deleteCardApi = (cardId) => {
+  return fetch(`${config.baseUrl}/cards/${cardId}`, {
+    method: "DELETE",
+    headers: config.headers,
+  }).then(getResponseData);
+};
+
+// Постановка и снятие лайка
+export const changeLikeCardStatus = (cardId, isLiked) => {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: isLiked ? "DELETE" : "PUT",
+    headers: config.headers,
+  }).then(getResponseData);
+};
+\end{minted}
+
 \end{document}
+
